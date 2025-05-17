@@ -12,29 +12,39 @@ public class Anuncio {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "anu_id")
     private Long Id;
+
     @Column(name = "anu_title")
     private String titulo;
+
     @Column(name = "anu_date")
     private LocalDate data;
+
     @Column(name = "anu_desc")
     private String descricao;
+
     @Column(name = "anu_price")
     private double preco;
+
     @ManyToOne
     @JoinColumn(name = "cat_id")
     private Categoria categoria;
+
     @ManyToOne
     @JoinColumn(name = "usr_id")
     private Usuario usuario;
+
     @OneToMany(mappedBy = "anuncio")
     private List<Pergunta> perguntas;
 
+    @OneToMany(mappedBy = "anuncio", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Foto> fotos;
+
     public Anuncio() {
-        this(0L,"",null,"",0,null,null);
+        this(0L,"",null,"",0,null,null,null);
     }
 
 
-    public Anuncio(Long id, String titulo, LocalDate data, String descricao, double preco, Categoria categoria, Usuario usuario) {
+    public Anuncio(Long id, String titulo, LocalDate data, String descricao, double preco, Categoria categoria, Usuario usuario, List<Foto> fotos) {
         Id = id;
         this.titulo = titulo;
         this.data = data;
@@ -42,6 +52,7 @@ public class Anuncio {
         this.preco = preco;
         this.categoria = categoria;
         this.usuario = usuario;
+        this.fotos = fotos;
     }
 
     public Long getId() {
@@ -106,5 +117,13 @@ public class Anuncio {
 
     public void setPerguntas(List<Pergunta> perguntas) {
         this.perguntas = perguntas;
+    }
+
+    public List<Foto> getFotos() {
+        return fotos;
+    }
+
+    public void setFotos(List<Foto> fotos) {
+        this.fotos = fotos;
     }
 }
