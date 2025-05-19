@@ -21,7 +21,7 @@ public class CategoriaRestController {
         List<Categoria> categoriaList = categoriaService.getAll();
         if(categoriaList!=null && !categoriaList.isEmpty())
             return ResponseEntity.ok(categoriaList);
-        return ResponseEntity.badRequest().body(new Erro("categorias não encontradas"));
+        return ResponseEntity.badRequest().body(new Erro("Categorias não encontradas"));
     }
 
     @GetMapping(value = "{id}")
@@ -29,7 +29,7 @@ public class CategoriaRestController {
         Categoria categoria = categoriaService.getId(id);
         if(categoria != null)
             return ResponseEntity.ok(categoria);
-        return ResponseEntity.badRequest().body(new Erro("categorias não encontradas"));
+        return ResponseEntity.badRequest().body(new Erro("Categoria não encontrada"));
     }
 
     @PostMapping
