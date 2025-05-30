@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import unoeste.fipp.mercadofipp.entities.Anuncio;
 import unoeste.fipp.mercadofipp.entities.Erro;
 import unoeste.fipp.mercadofipp.entities.Foto;
+import unoeste.fipp.mercadofipp.entities.Pergunta;
 import unoeste.fipp.mercadofipp.repositories.AnuncioRepository;
 import unoeste.fipp.mercadofipp.services.AnuncioService;
 
@@ -33,6 +34,14 @@ public class AnuncioRestController {
             return ResponseEntity.badRequest().body(new Erro("Anuncios não encontrados"));
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Object> getAnuncioPorId(@PathVariable Long id) {
+        Anuncio anuncio = anuncioService.getById(id);
+        if(anuncio != null)
+            return ResponseEntity.ok(anuncio);
+        return ResponseEntity.badRequest().body(new Erro("Anuncio nao encontrado"));
+    }
+
     @PostMapping("add-pergunta/{id}/{texto}")
     public ResponseEntity<Object> addPergunta(@PathVariable(name = "id") Long idAnuncio, @PathVariable(name = "texto") String texto){
         if(anuncioService.addPergunta(idAnuncio,texto)){
@@ -56,7 +65,7 @@ public class AnuncioRestController {
         Anuncio novoAnuncio = anuncioService.add(anuncio);
 
         if(novoAnuncio != null)
-            return ResponseEntity.ok(anuncio);
+            return ResponseEntity.ok(novoAnuncio);
         else
             return ResponseEntity.badRequest().body(new Erro("Erro ao gravar anuncio"));
     }
@@ -71,7 +80,7 @@ public class AnuncioRestController {
                 Anuncio anuncio = optAnuncio.get();
 
                 String nomeArquivo = file.getOriginalFilename();
-                Path destino = Paths.get("uploads/" + nomeArquivo);
+                Path destino = Paths.get("src/main/resources/static/uploads/" + nomeArquivo);
                 Files.copy(file.getInputStream(), destino, StandardCopyOption.REPLACE_EXISTING);
 
                 Foto novaFoto = new Foto();
@@ -96,5 +105,19 @@ public class AnuncioRestController {
             return ResponseEntity.ok(anuncio);
         else
             return ResponseEntity.badRequest().body(new Erro("Erro ao alterar anuncio"));
+    }
+
+    @GetMapping("/perguntas/{id}")
+    public ResponseEntity<Object> getPerguntas(@PathVariable Long id){
+        try {
+            List<Pergunta> perguntas = anuncioService.getPerguntasByAnuncio(id);
+            if(perguntas != null)
+                return ResponseEntity.ok(perguntas);
+            return ResponseEntity.noContent().build(); //aqui é que nao achou nenhuma pergunta
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(new Erro("Erro ao retornar perguntas"));
+        }
     }
 }

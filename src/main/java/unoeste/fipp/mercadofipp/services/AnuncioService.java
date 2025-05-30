@@ -7,6 +7,7 @@ import unoeste.fipp.mercadofipp.entities.Foto;
 import unoeste.fipp.mercadofipp.entities.Pergunta;
 import unoeste.fipp.mercadofipp.repositories.AnuncioRepository;
 import unoeste.fipp.mercadofipp.repositories.FotoRepository;
+import unoeste.fipp.mercadofipp.repositories.PerguntaRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,9 @@ public class AnuncioService {
     @Autowired
     private FotoRepository fotoRepository;
 
+    @Autowired
+    private PerguntaRepository perguntaRepository;
+
     public List<Anuncio> getAll(){
         return anuncioRepository.findAll();
     }
@@ -30,6 +34,10 @@ public class AnuncioService {
             }
         }
         return anuncioRepository.save(anuncio);
+    }
+
+    public Anuncio getById(Long id) {
+        return anuncioRepository.findById(id).orElse(null);
     }
 
     public boolean addPergunta(Long idAnuncio, String texto){
@@ -52,6 +60,10 @@ public class AnuncioService {
             e.printStackTrace(); //<-- LOG PARA ERRO
             return false;
         }
+    }
+
+    public List<Pergunta> getPerguntasByAnuncio(Long idAnuncio){
+        return perguntaRepository.findByAnuncioId(idAnuncio);
     }
 
     public Optional<Anuncio> findById(Long anuId) {

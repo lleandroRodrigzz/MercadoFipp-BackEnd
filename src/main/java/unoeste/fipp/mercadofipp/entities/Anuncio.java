@@ -40,7 +40,7 @@ public class Anuncio {
     private List<Foto> fotos;
 
     public Anuncio() {
-        this(0L,"",null,"",0,null,null,null);
+        this(0L,"",null,"",0.0,null,null,null);
     }
 
 
